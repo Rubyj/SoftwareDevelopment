@@ -1,37 +1,32 @@
 public class FFT {
-    
-        public byte[] computeFFT(byte[] byteArr) {
-                int N = byteArr.length;
 
-            // base case
-            if (N == 1) { 
-                return new byte[] { byteArr[0] };
-            }
-
-            // radix 2 Cooley-Tukey FFT
-            if (N % 2 != 0) { 
-                throw new RuntimeException("N is not a power of 2"); 
-            }
-            
-            byte[] even = new byte[N/2];
-            for (int i = 0; i < N/2; i++) {
-                even[i] = byteArr[2*i];
-            }
-            byte[] evenArray = computeFFT(even);
-            
-            byte[] odd = new byte[N/2];
-            for (int i = 0; i < N/2; i++) {
-                odd[i] = byteArr[2*i + 1];
-            }
-            byte[] oddArray = computeFFT(even);
-            
-            byte[] finalBytes = new byte[N/2];
-            for (int i = 0; i < N/2; i++) {
-                double k = -2 * i * Math.PI / N;
-                //Do stuff here
-            }
-            
-            return finalBytes;
-                
+		FFT() {}
+		
+        public void computeFFT(Complex[] complexArr) {
+        	int N = complexArr.length;
+        	
+        	if (N <= 1) {
+        		return;
+        	}
+        	
+        	Complex[] evenArray = new Complex[N/2];
+        	Complex[] oddArray = new Complex[N/2];
+        	
+        	for (int i = 0; i < N/2; i++) {
+        		evenArray[i] = new Complex(complexArr[2 * i].number);
+        		oddArray[i] = new Complex(complexArr[(2 * i) + 1].number);
+        	}
+        	
+        	computeFFT(oddArray);
+        	computeFFT(evenArray);
+       
+        	
+        	for (int i = 0; i < N/2; i++) {
+        		Complex cNumber = new Complex((float)Math.cos(-2 * Math.PI * i / N), (float)Math.sin(-2 * Math.PI * i / N));
+        		cNumber = cNumber.times(oddArray[i]);
+        		complexArr[i] = cNumber.add(evenArray[i]);
+        		complexArr[i + N/2] = evenArray[i].minus(cNumber);
+        	}
+        	
         }
 }
