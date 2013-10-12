@@ -36,4 +36,12 @@ public class Complex {
 		float tempImag = (this.number * c.imaginary + this.imaginary * c.number);
 		return new Complex(tempReal, tempImag);
 	}
+	
+	public boolean equals(Object o){
+		if (o != null && o instanceof Complex){
+		Complex c = (Complex) o;
+		return (this.number == c.number) && (this.imaginary == c.imaginary);
+		}
+		else return false;
+	}
 }

@@ -29,4 +29,35 @@ public class FFT {
         	}
         	
         }
+        
+        public int compare(Complex[] c1, Complex[] c2) {
+        	Complex[] comp1 = c1;
+        	Complex[] comp2 = c2;
+        	// This will ensure that whichever order the arguments are passed, comp1 is shorter
+        	if (c1.length > c2.length) {
+        		comp1 = c2;
+        		comp2 = c1;
+        	}
+        	
+        	Complex e1 = comp1[0];
+        	
+        	// This assumes that a match, 1, occurs only when comp1 is completely contained within comp2
+        	for (int x = 0; x <= comp2.length - comp1.length; x++){
+        		if (comp2[x].equals(e1)){
+        			if (this.contains(comp1, comp2, x)){
+        				return 1;
+        			}
+        		}
+        	}
+        	return 0;
+        }
+        
+        public boolean contains(Complex[] c1, Complex[] c2, int i){
+        	for (int x = 0; x < c2.length; x++){
+        		if (!(c1[i + x].equals(c2[x]))){
+        			return false;
+        		}
+        	}        	
+        	return true;
+        }
 }

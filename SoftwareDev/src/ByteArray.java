@@ -13,38 +13,48 @@ public class ByteArray {
         
         public static void main(String[] args) throws UnsupportedAudioFileException, IOException {
         		
+        		//Test Data
         		Complex c0 = new Complex(0);
         		Complex c1 = new Complex(1);
-        		
         		Complex[] cArray = {c1, c1, c1, c1, c0, c0, c0, c0};
         	
-                ByteArray b = new ByteArray();
-                byte[] bytesOne = b.toByteArray();
-                Complex[] complexOne = b.toComplexArray(bytesOne);
-                FFT fft = new FFT();
-                
+                /*
                 for (int i = 0; i < cArray.length; i++) {
                 	System.out.print(cArray[i].number + ", ");
                 }
-                
-                System.out.println("SEPARATE");
-               // Complex[] cArray2 = 
-                fft.computeFFT(cArray);
-                 
-                for (int i = 0; i < cArray.length; i++) {
-                	System.out.print("(" + cArray[i].number + ", " + cArray[i].imaginary + ")" + ", ");
+                */
+
+                /*
+                for (int i = 0; i < complexOne.length; i++) {
+                	System.out.print("(" + complexOne[i].number + ", " + complexOne[i].imaginary + ")" + ", ");
                 }
-        }
-        
-        public byte[] toByteArray() throws UnsupportedAudioFileException, IOException {
+                */
                 
                 Scanner input = new Scanner(System.in);
-                String path = "";
-                
-                System.out.println("Please enter a file path");
-                //Path for the file to analyze
-                path = input.nextLine();
+                System.out.println("Please enter a file path (1)");
+                //Path for the first file to analyze
+                String path1 = input.nextLine();
+                System.out.println("Please enter a file path (2)");
+                //Path for the second file to analyze
+                String path2 = input.nextLine();
                 input.close();
+                
+                ByteArray b1 = new ByteArray();
+                byte[] bytesOne = b1.toByteArray(path1);
+                Complex[] complexOne = b1.toComplexArray(bytesOne);
+                ByteArray b2 = new ByteArray();
+                byte[] bytesTwo = b2.toByteArray(path2);
+                Complex[] complexTwo = b2.toComplexArray(bytesTwo);
+                
+                FFT fft = new FFT();
+                fft.computeFFT(complexOne);
+                fft.computeFFT(complexTwo);
+                
+                System.out.print(fft.compare(complexOne, complexTwo));
+                
+        }
+        
+        public byte[] toByteArray(String path) throws UnsupportedAudioFileException, IOException {
                 
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 AudioInputStream in = AudioSystem.getAudioInputStream(new File(path));
