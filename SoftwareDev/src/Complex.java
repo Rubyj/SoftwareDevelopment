@@ -44,4 +44,26 @@ public class Complex {
 		}
 		else return false;
 	}
+	
+	public float approxEqual(Complex c) {
+		float realScore;
+		float imagScore;
+		
+		if (c != null) {
+			if (this.number < c.number) {
+				realScore = this.number/c.number;
+			} else {
+				realScore = c.number/this.number;
+			}
+			
+			if (this.imaginary < c.imaginary) {
+				imagScore = this.imaginary/c.imaginary;
+			} else {
+				imagScore = c.imaginary/this.imaginary;
+			}
+			
+			return (realScore + imagScore)/2;
+		}
+		return 0;
+	}
 }
