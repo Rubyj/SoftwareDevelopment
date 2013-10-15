@@ -11,21 +11,19 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class ByteArray {
         
         
-        public static void main(String[] args) throws UnsupportedAudioFileException, IOException {
+        public static void main(String[] args) throws UnsupportedAudioFileException, IOException, Exception {
         		
+        		if (args.length > 2) {
+        			throw new Exception("This Program Only Supports 2 files. Exiting..");
+        		}
+        	
+        		String path1 = args[0];
+        		String path2 = args[1];
+        	
         		//Test Data
         		Complex c0 = new Complex(0);
         		Complex c1 = new Complex(1);
         		Complex[] cArray = {c1, c1, c1, c1, c0, c0, c0, c0};
-                
-                Scanner input = new Scanner(System.in);
-                System.out.println("Please enter a file path (1)");
-                //Path for the first file to analyze
-                String path1 = input.nextLine();
-                System.out.println("Please enter a file path (2)");
-                //Path for the second file to analyze
-                String path2 = input.nextLine();
-                input.close();
                 
                 ByteArray b1 = new ByteArray();
                 byte[] bytesOne = b1.toByteArray(path1);
@@ -39,7 +37,7 @@ public class ByteArray {
                 fft.computeFFT(complexTwo);
                 
                 System.out.print(fft.compare(complexOne, complexTwo) * 100 + "% Similarity Score");
-                
+                System.exit(0);
         }
         
         public byte[] toByteArray(String path) {
@@ -61,12 +59,12 @@ public class ByteArray {
 	                audioBytes = out.toByteArray();
 				} catch (UnsupportedAudioFileException e) {
 					// TODO Auto-generated catch block
-					System.out.println("Unsupported Audio File Format Detected. Exiting..");
-					System.exit(0);
+					System.out.println("ERROR: Unsupported Audio File Format Detected. Exiting..");
+					System.exit(1);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					System.out.println("File Not Found. Exiting..");
-					System.exit(0);
+					System.out.println("ERROR: File Not Found. Exiting..");
+					System.exit(1);
 				}
 				
 				return audioBytes;
