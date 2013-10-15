@@ -30,7 +30,8 @@ public class FFT {
         	
         }
         
-        public int compare(Complex[] c1, Complex[] c2) {
+        public float compare(Complex[] c1, Complex[] c2) {
+        	
         	Complex[] comp1 = c1;
         	Complex[] comp2 = c2;
         	// This will ensure that whichever order the arguments are passed, comp1 is shorter
@@ -42,22 +43,32 @@ public class FFT {
         	Complex e1 = comp1[0];
         	
         	// This assumes that a match, 1, occurs only when comp1 is completely contained within comp2
-        	for (int x = 0; x <= comp2.length - comp1.length; x++){
-        		if (comp2[x].equals(e1)){
-        			if (this.contains(comp1, comp2, x)){
-        				return 1;
+        	float biggestMatch = 0;
+        	
+        	if (comp2.length - comp1.length == 0) {
+        		return this.contains(comp1, comp2, 0);
+        	} else {
+        		for (int x = 0; x <= comp2.length - comp1.length; x++){
+        		
+        			if (comp2[x].approxEqual(e1) >= .8){
+        				float tempMatch = this.contains(comp1, comp2, x);
+        				//System.out.println(tempMatch);
+        				if (tempMatch > biggestMatch) {
+        					biggestMatch = tempMatch;
+        				}
         			}
         		}
+        		return biggestMatch;
         	}
-        	return 0;
+        	
         }
         
-        public boolean contains(Complex[] c1, Complex[] c2, int i){
-        	for (int x = 0; x < c2.length; x++){
-        		if (!(c1[i + x].equals(c2[x]))){
-        			return false;
-        		}
+        public float contains(Complex[] c1, Complex[] c2, int i){
+        	float counter = 0;
+        	
+        	for (int x = 0; x < c1.length; x++){
+        		counter += c1[x].approxEqual(c2[x + i]);
         	}        	
-        	return true;
+        	return counter/c1.length;
         }
 }
