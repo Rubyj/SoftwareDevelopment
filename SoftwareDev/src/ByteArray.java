@@ -9,6 +9,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class ByteArray {
         
+		//Method to covert given wav (by file path) to an array of Bytes
         public byte[] toByteArray(String path) {
                 
         		byte[] audioBytes = null;
@@ -27,11 +28,11 @@ public class ByteArray {
 	                out.flush();
 	                audioBytes = out.toByteArray();
 				} catch (UnsupportedAudioFileException e) {
-					// TODO Auto-generated catch block
+					// If Unsupported File Type
 					System.out.println("ERROR: Unsupported Audio File Format Detected. Exiting..");
 					System.exit(1);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					// If File Not Found
 					System.out.println("ERROR: File Not Found. Exiting..");
 					System.exit(1);
 				}
@@ -39,6 +40,7 @@ public class ByteArray {
 				return audioBytes;
         }
         
+        //Transform the array of Bytes to an array of Complex
         public Complex[] toComplexArray(byte[] byteArray) {
         	Complex[] complexArray = new Complex[byteArray.length];
         	

@@ -3,10 +3,12 @@ import java.io.IOException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Assignment4{
-    public static void main(String[] args) throws UnsupportedAudioFileException, IOException, Exception {
+    public static void main(String[] args) throws UnsupportedAudioFileException, IOException {
 		
-		if (args.length > 2) {
-			throw new Exception("This Program Only Supports 2 files. Exiting..");
+    	//If program is provided more/less than 2 arguments throw error
+		if (args.length != 2) {
+			System.out.println("ERROR: This Program Only Supports 2 files. Exiting..");
+			System.exit(1);
 		}
 	
 		String path1 = args[0];
@@ -27,17 +29,20 @@ public class Assignment4{
         byte[] bytesTwo = b2.toByteArray(path2);
         Complex[] complexTwo = b2.toComplexArray(bytesTwo);
         
+        //Compute the FFT of the two Complex[] and store into result
         FFT fft = new FFT();
         fft.computeFFT(complexOne);
         fft.computeFFT(complexTwo);
         
         float result = fft.compare(complexOne, complexTwo);
         
+        //If result greater than 50% print match else print no match (with similarity score)
         if (result >= .5) {
         	System.out.println("Match " + result * 100 + "% Similarity Score");
+        	System.exit(0);
         } else {
         	System.out.println("No Match " + result * 100 + "% Similarity Score");
+        	System.exit(0);
         }
-        System.exit(0);
     }
 }
