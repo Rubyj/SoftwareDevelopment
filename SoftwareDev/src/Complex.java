@@ -50,8 +50,11 @@ public class Complex {
 	
 	//Method that returns the percentage equality of 2 complex numbers
 	public float approxEqual(Complex c) {
+		//float realScore;
+		//float imagScore;
 		
 		if (c != null) {
+			
 			
 			//Calculate a score for the similarities between Complex numbers
 			Double thisScore = Math.sqrt(Math.pow(this.number, 2) + Math.pow(this.imaginary, 2));
@@ -66,6 +69,31 @@ public class Complex {
 			} else {
 				return (float)(cScore/thisScore);
 			}
+			
+			
+            /*
+            if (Math.abs(this.number) < Math.abs(c.number)) {
+                    realScore = Math.abs(this.number)/Math.abs(c.number);
+            } else {
+                    realScore = Math.abs(c.number)/Math.abs(this.number);
+            }
+            
+            if (Math.abs(this.imaginary) < Math.abs(c.imaginary)) {
+                    imagScore = Math.abs(this.imaginary)/Math.abs(c.imaginary);
+            } else {
+                    imagScore = Math.abs(c.imaginary)/Math.abs(this.imaginary);
+            }
+            
+            if (this.number == 0 && c.number == 0) {
+                    realScore = 1;
+            }
+            
+            if (this.imaginary == 0 && c.imaginary == 0) {
+                    imagScore = 1;
+            }
+            
+            return (realScore + imagScore)/2;
+            */
 			
 		} else {
 			return 0;

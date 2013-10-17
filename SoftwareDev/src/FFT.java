@@ -70,7 +70,10 @@ public class FFT {
         	float counter = 0;
         	
         	for (int x = 0; x < c1.length; x++){
-        		counter += c1[x].approxEqual(c2[x + i]);
+        		float tempVal = c1[x].approxEqual(c2[x + i]);
+        		//if (tempVal >= .5) {
+        			counter += tempVal;
+        		//}
         	}        	
         	return counter/c1.length;
         }
