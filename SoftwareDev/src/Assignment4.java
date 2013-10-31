@@ -34,15 +34,16 @@ public class Assignment4{
         fft.computeFFT(complexOne);
         fft.computeFFT(complexTwo);
         
-        float result = fft.compare(complexOne, complexTwo);
+        float result = fft.shortContains(complexOne, complexTwo);
+        System.out.println(result);
         
         //If result greater than 50% print match else print no match (with similarity score)
-        if (result >= .5) {
-            System.out.println("MATCH"); // + result * 100 + "% Similarity Score");
-            System.exit(0);
-        } else {
-            System.out.println("NO MATCH"); // + result * 100 + "% Similarity Score");
-            System.exit(0);
-        }
+//        if (result >= .5) {
+//            System.out.println("MATCH"); // + result * 100 + "% Similarity Score");
+//            System.exit(0);
+//        } else {
+//            System.out.println("NO MATCH"); // + result * 100 + "% Similarity Score");
+//            System.exit(0);
+//        }
     }
 }
