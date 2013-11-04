@@ -38,12 +38,12 @@ public class Assignment4{
         System.out.println(result);
         
         //If result greater than 50% print match else print no match (with similarity score)
-//        if (result >= .5) {
-//            System.out.println("MATCH"); // + result * 100 + "% Similarity Score");
-//            System.exit(0);
-//        } else {
-//            System.out.println("NO MATCH"); // + result * 100 + "% Similarity Score");
-//            System.exit(0);
-//        }
+        if (result <= .1) {
+            System.out.println("MATCH"); // + result * 100 + "% Similarity Score");
+            System.exit(0);
+        } else {
+            System.out.println("NO MATCH"); // + result * 100 + "% Similarity Score");
+            System.exit(0);
+        }
     }
 }

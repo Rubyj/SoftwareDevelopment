@@ -51,6 +51,7 @@ public class FFT {
                 complexScore = complexScore.add(comp1[i]);
                 tempScore = tempScore.add(comp2[i]);
             }
+            
             storage.add(tempScore);
             
             for (int i = 1; i <= comp2.length - comp1.length; i++) {
@@ -121,7 +122,7 @@ public class FFT {
             Complex[] comp2 = c2;
             
             if (c1.length == c2.length) {
-                System.out.println(comp2.length);
+                //System.out.println(comp2.length);
                 
                 float counter = 0;
                     for (int x = 0; x < comp1.length; x++) {
@@ -138,7 +139,7 @@ public class FFT {
             }
             
             ArrayList<Integer> indexStorage = this.shortCompare(comp1, comp2);
-            System.out.println(comp2.length);
+            System.out.println(indexStorage);
             
             float counter;
             float smallestMatch = 50000;
@@ -146,14 +147,19 @@ public class FFT {
                 counter = 0;
                 for (int x = 0; x < comp1.length; x++) {
                     //System.out.println(comp1[x].approxEqual(comp2[x + indexStorage.get(j)]));
-                    counter += comp1[x].approxEqual(comp2[x + indexStorage.get(j)]);
+                    counter = comp1[x].approxEqual(comp2[x + indexStorage.get(j)]);
+                    //System.out.println(counter);
                 }
                 counter = counter/comp1.length;
-                System.out.println(counter);
+               // System.out.println(counter);
                 if (counter < smallestMatch) {
                     smallestMatch = counter;
                 }
             }
             return smallestMatch;
+        }
+        
+        private static boolean isPowerOfTwoFast(int n) {
+            return ((n!=0) && (n&(n-1))==0);
         }
 }
