@@ -55,52 +55,23 @@ public class Complex {
         
         if (c != null) {
             
-            /*
-            //Calculate a score for the similarities between Complex numbers
-            Double thisScore = Math.sqrt(Math.pow(this.number, 2) + Math.pow(this.imaginary, 2));
-            Double cScore = Math.sqrt(Math.pow(c.number, 2) + Math.pow(c.imaginary, 2));
-            
-            if (thisScore == 0 && cScore == 0) {
-                return 1;
-            }
-            
-            if (thisScore < cScore) {
-                return (float)(thisScore/cScore);
-            } else {
-                return (float)(cScore/thisScore);
-            }
-            */
 
             Double score = Math.sqrt(Math.pow(c.number - this.number, 2) + Math.pow(c.imaginary - this.imaginary, 2));
             return (float)(score/1);
-            
-            
-            /*
-            if (Math.abs(this.number) < Math.abs(c.number)) {
-                    realScore = Math.abs(this.number)/Math.abs(c.number);
-            } else {
-                    realScore = Math.abs(c.number)/Math.abs(this.number);
-            }
-            
-            if (Math.abs(this.imaginary) < Math.abs(c.imaginary)) {
-                    imagScore = Math.abs(this.imaginary)/Math.abs(c.imaginary);
-            } else {
-                    imagScore = Math.abs(c.imaginary)/Math.abs(this.imaginary);
-            }
-            
-            if (this.number == 0 && c.number == 0) {
-                    realScore = 1;
-            }
-            
-            if (this.imaginary == 0 && c.imaginary == 0) {
-                    imagScore = 1;
-            }
-            
-            return (realScore + imagScore)/2;
-            */
+
             
         } else {
             return 0;
         }
+    }
+    
+    public Double magnitude() {
+        if (this != null) {
+            Float temp = ((this.number * this.number) + (this.imaginary * this.imaginary));
+            double dTemp = Math.sqrt(temp.doubleValue());
+            return dTemp;
+        }
+        
+        return (double)0;
     }
 }

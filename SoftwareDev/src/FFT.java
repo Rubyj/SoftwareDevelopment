@@ -1,7 +1,10 @@
 import java.util.ArrayList;
 
 public class FFT {
-
+        
+        Double[] magnitudeArray1;
+        Double[] magnitudeArray2;
+        
         FFT() {}
         
         //Function to compute FFT of given Complex[]
@@ -44,6 +47,19 @@ public class FFT {
                 comp1 = c2;
                 comp2 = c1;
             }
+            
+            magnitudeArray1 = new Double[comp1.length];
+            magnitudeArray2 = new Double[comp2.length];
+            
+            for (int i = 0; i < comp1.length; i++) {
+                magnitudeArray1[i] = comp1[i].magnitude();
+                magnitudeArray2[i] = comp2[i].magnitude();
+            }
+            
+            for (int i = comp1.length; i < comp2.length; i++) {
+                magnitudeArray2[i] = comp2[i].magnitude();
+            }
+
             
             Complex complexScore = new Complex(0, 0);
             Complex tempScore = new Complex(0, 0);
@@ -121,38 +137,65 @@ public class FFT {
             Complex[] comp1 = c1;
             Complex[] comp2 = c2;
             
-            if (c1.length == c2.length) {
-                //System.out.println(comp2.length);
-                
-                float counter = 0;
-                    for (int x = 0; x < comp1.length; x++) {
-                        counter += comp1[x].approxEqual(comp2[x]);
-                    }
-                    counter = counter/comp1.length;
-                
-                return counter; 
-            }
-            
             if (c1.length > c2.length) {
                 comp1 = c2;
                 comp2 = c1;
             }
             
             ArrayList<Integer> indexStorage = this.shortCompare(comp1, comp2);
+            
+            if (comp1.length == comp2.length) {
+                //System.out.println(comp2.length);
+                
+                float counter = 0;
+                    for (int x = 0; x < this.magnitudeArray1.length; x++) {
+                        Double comp1MagX = this.magnitudeArray1[x];
+                        Double comp2MagX = this.magnitudeArray2[x];
+
+                        if (comp1MagX < comp2MagX) {
+                            if (comp1MagX/comp2MagX > .7) {
+                                counter += 1;
+                            }
+                        } else {
+                            if (comp2MagX/comp1MagX > .7) {
+                                counter += 1;
+                            }
+                        }
+                        
+                        //counter += comp1[x].approxEqual(comp2[x]);
+                    }
+                    counter = counter/comp1.length;
+                
+                return counter; 
+            }
+            
             System.out.println(indexStorage);
             
             float counter;
-            float smallestMatch = 50000;
+            float smallestMatch = 0;
             for (int j = 0; j < indexStorage.size(); j++) {
                 counter = 0;
                 for (int x = 0; x < comp1.length; x++) {
                     //System.out.println(comp1[x].approxEqual(comp2[x + indexStorage.get(j)]));
-                    counter = comp1[x].approxEqual(comp2[x + indexStorage.get(j)]);
+                    Double comp1MagX = this.magnitudeArray1[x]; 
+                    Double comp2MagX = this.magnitudeArray2[x + indexStorage.get(j)];
+
+                    if (comp1MagX < comp2MagX) {
+                        if (comp1MagX/comp2MagX > .4) {
+                            counter += 1;
+                        }
+                    } else {
+                        if (comp2MagX/comp1MagX > .4) {
+                            counter += 1;
+                        }
+                        //counter += comp2MagX/comp1MagX;
+                    }
+                    //counter = comp1[x].approxEqual(comp2[x + indexStorage.get(j)]);
                     //System.out.println(counter);
                 }
                 counter = counter/comp1.length;
                // System.out.println(counter);
-                if (counter < smallestMatch) {
+                if (counter > smallestMatch) {
                     smallestMatch = counter;
                 }
             }
