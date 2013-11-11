@@ -34,8 +34,10 @@ public class Complex {
     
     //Multiplying 2 complex numbers
     public Complex times(Complex c) {
-        float tempReal = (this.number * c.number) - (this.imaginary * c.imaginary);
-        float tempImag = (this.number * c.imaginary + this.imaginary * c.number);
+        float tempReal = (this.number * c.number) - 
+                (this.imaginary * c.imaginary);
+        float tempImag = (this.number * c.imaginary + 
+                this.imaginary * c.number);
         return new Complex(tempReal, tempImag);
     }
     
@@ -56,7 +58,8 @@ public class Complex {
         if (c != null) {
             
 
-            Double score = Math.sqrt(Math.pow(c.number - this.number, 2) + Math.pow(c.imaginary - this.imaginary, 2));
+            Double score = Math.sqrt(Math.pow(c.number - this.number, 2) + 
+                    Math.pow(c.imaginary - this.imaginary, 2));
             return (float)(score/1);
 
             
@@ -65,9 +68,11 @@ public class Complex {
         }
     }
     
+    //Compute the magnitude of this complex
     public Double magnitude() {
         if (this != null) {
-            Float temp = ((this.number * this.number) + (this.imaginary * this.imaginary));
+            Float temp = ((this.number * this.number) + 
+                    (this.imaginary * this.imaginary));
             double dTemp = Math.sqrt(temp.doubleValue());
             return dTemp;
         }

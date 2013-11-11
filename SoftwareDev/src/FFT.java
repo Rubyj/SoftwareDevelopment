@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class FFT {
         
-        Double[] magnitudeArray1;
-        Double[] magnitudeArray2;
+        byte[] magnitudeArray1;
+        byte[] magnitudeArray2;
         
         FFT() {}
         
@@ -27,7 +27,9 @@ public class FFT {
             computeFFT(evenArray);
             
             for (int i = 0; i < N/2; i++) {
-                Complex cNumber = new Complex((float)Math.cos(-2 * Math.PI * i / N), (float)Math.sin(-2 * Math.PI * i / N));
+                Complex cNumber = new Complex((float)Math.cos(-2 * Math.PI 
+                        * i / N), 
+                        (float)Math.sin(-2 * Math.PI * i / N));
                 cNumber = cNumber.times(oddArray[i]);
                 complexArr[i] = cNumber.add(evenArray[i]);
                 complexArr[i + N/2] = evenArray[i].minus(cNumber);
@@ -35,174 +37,147 @@ public class FFT {
             
         }
         
-        public ArrayList<Integer> shortCompare(Complex[] c1, Complex[] c2) {
+        //Builds a list of likely indexes that match for the two given inputs
+        public ArrayList<Integer> shortCompare(byte[] c1, byte[] c2) {
             
-            ArrayList<Complex> storage = new ArrayList<Complex>();
+            //ArrayList<Float> storage = new ArrayList<Float>();
             ArrayList<Integer> indexStorage = new ArrayList<Integer>();
             
-            Complex[] comp1 = c1;
-            Complex[] comp2 = c2;
+            byte[] comp1 = c1;
+            byte[] comp2 = c2;
             
             if (c1.length > c2.length) {
                 comp1 = c2;
                 comp2 = c1;
             }
             
-            magnitudeArray1 = new Double[comp1.length];
-            magnitudeArray2 = new Double[comp2.length];
-            
+            float complexScore = 0;
+            float tempScore = 0;
             for (int i = 0; i < comp1.length; i++) {
-                magnitudeArray1[i] = comp1[i].magnitude();
-                magnitudeArray2[i] = comp2[i].magnitude();
+                complexScore = complexScore + comp1[i];
+                tempScore = tempScore + comp2[i];
             }
             
-            for (int i = comp1.length; i < comp2.length; i++) {
-                magnitudeArray2[i] = comp2[i].magnitude();
-            }
-
-            
-            Complex complexScore = new Complex(0, 0);
-            Complex tempScore = new Complex(0, 0);
-            for (int i = 0; i < comp1.length; i++) {
-                complexScore = complexScore.add(comp1[i]);
-                tempScore = tempScore.add(comp2[i]);
-            }
-            
-            storage.add(tempScore);
-            
-            for (int i = 1; i <= comp2.length - comp1.length; i++) {
-                tempScore = tempScore.minus(comp2[i - 1]);
-                tempScore = tempScore.add(comp2[i + comp1.length - 1]);
-                storage.add(tempScore);
-            }
-            
-            //DO WE NEED TO IMPLEMENT ITEMS PAST COMP2LENGTH - COMP1LENGTH IN COMP2
-//            for (int i = comp2.length - comp1.length; i < comp2.length; i ++) {
-//                tempScore = tempScore.minus(comp2[i - 1]);
-//                storage.add(tempScore);
-//            }
-            
-            float tempAVG;
-            for (int i = 0; i < storage.size(); i ++) {
-                tempAVG = complexScore.approxEqual(storage.get(i));
-                tempAVG = tempAVG/comp1.length;
-                if (tempAVG < .3) {
-                    System.out.println(tempAVG);
-                    indexStorage.add(i);
-                    System.out.println(i);
-                }
-            }
-            System.out.println(storage.size());
-            return indexStorage;
-        }
-        
-//        //Compare two complex arrays
-//        public float longCompare(Complex[] c1, Complex[] c2) {
-//            
-//            Complex[] comp1 = c1;
-//            Complex[] comp2 = c2;
-//            // This will ensure that whichever order the arguments are passed, comp1 is shorter
-//            if (c1.length > c2.length) {
-//                comp1 = c2;
-//                comp2 = c1;
-//            }
-//            
-//            Complex e1 = comp1[0];
-//            
-//            float smallestMatch = 100000;
-//            int comp1Length = comp1.length;
-//            int comp2Length = comp2.length;
-//            
-//            //Compare first element of comp1 to elements in comp2
-//            //If match see if rest of comp1 is contained in comp2 at that location
-//            //Return greatest similarity of matches found
-//            if (comp2Length == comp1Length) {
-//                return this.longContains(comp1, comp2, 0);
-//            } else {
-//                for (int x = 0; x <= comp2Length - comp1Length; x++){
-//                        float tempMatch = this.longContains(comp1, comp2, x);
-//                        if (tempMatch < smallestMatch) {
-//                            smallestMatch = tempMatch;
-//                        }
-//                }
-//                System.out.println(smallestMatch);
-//                return smallestMatch;
-//            }
-//            
-//        }
-        
-        //Check to see if c1 is approximately contained in c2, starting at i
-        //Return the summation of the similarity scores divided by length of c1
-        public float shortContains(Complex[] c1, Complex[] c2){
-            Complex[] comp1 = c1;
-            Complex[] comp2 = c2;
-            
-            if (c1.length > c2.length) {
-                comp1 = c2;
-                comp2 = c1;
-            }
-            
-            ArrayList<Integer> indexStorage = this.shortCompare(comp1, comp2);
+            //storage.add(tempScore);
             
             if (comp1.length == comp2.length) {
-                //System.out.println(comp2.length);
-                
-                float counter = 0;
-                    for (int x = 0; x < this.magnitudeArray1.length; x++) {
-                        Double comp1MagX = this.magnitudeArray1[x];
-                        Double comp2MagX = this.magnitudeArray2[x];
+                indexStorage.add(0);
+            } else {
+                for (int i = 1; i <= comp2.length - comp1.length; i++) {
+                    tempScore = tempScore - comp2[i - 1];
+                    tempScore = tempScore + comp2[i + comp1.length - 1];
+                    
+                    if ((Math.sqrt(Math.pow(tempScore - complexScore, 2))/
+                            comp1.length) < 0.00000001) {
+                        //storage.add(tempScore);
+                        indexStorage.add(i);
+                    }
+                }
+            }
+            
+            return indexStorage;
 
+        }
+        
+        //Check to see if c1 is approximately contained in c2, starting at
+        //each index in the precomputed indexStorage 
+        //(similarity score is a % out of 100)
+        public float shortContains(byte[] c1, byte[] c2){
+            byte[] comp1 = c1;
+            byte[] comp2 = c2;
+            
+            if (c1.length > c2.length) {
+                comp1 = c2;
+                comp2 = c1;
+            }
+            
+            magnitudeArray1 = comp1.clone();
+            magnitudeArray2 = comp2.clone();
+            
+            if (comp1.length == comp2.length) {
+                ArrayList<Integer> indexStorage = 
+                        this.shortCompare(comp1, comp2);
+                
+                //System.out.println(indexStorage);
+                
+                float counter;
+                float smallestMatch = 0;
+                for (int j = 0; j < indexStorage.size(); j++) {
+                    counter = 0;
+                    for (int x = 0; x < comp1.length; x++) {
+                        //System.out.println(comp1[x].approxEqual(comp2[x + 
+                                                //indexStorage.get(j)]));
+                        
+                        Double comp1MagX = Math.sqrt(this.magnitudeArray1[x] 
+                                * this.magnitudeArray1[x]); 
+                        Double comp2MagX = Math.sqrt(this.magnitudeArray2[x + 
+                            indexStorage.get(j)] * this.magnitudeArray2[x + 
+                                indexStorage.get(j)]);
+                        
                         if (comp1MagX < comp2MagX) {
-                            if (comp1MagX/comp2MagX > .7) {
+                            if (comp1MagX/comp2MagX >= .6) {
                                 counter += 1;
                             }
                         } else {
-                            if (comp2MagX/comp1MagX > .7) {
+                            if (comp2MagX/comp1MagX >= .6) {
                                 counter += 1;
                             }
+                            //counter += comp2MagX/comp1MagX;
                         }
-                        
-                        //counter += comp1[x].approxEqual(comp2[x]);
+                        //counter = comp1[x].approxEqual(comp2[x + 
+                                                   //indexStorage.get(j)]);
+                        //System.out.println(counter);
                     }
                     counter = counter/comp1.length;
-                
-                return counter; 
-            }
-            
-            System.out.println(indexStorage);
-            
-            float counter;
-            float smallestMatch = 0;
-            for (int j = 0; j < indexStorage.size(); j++) {
-                counter = 0;
-                for (int x = 0; x < comp1.length; x++) {
-                    //System.out.println(comp1[x].approxEqual(comp2[x + indexStorage.get(j)]));
-                    Double comp1MagX = this.magnitudeArray1[x]; 
-                    Double comp2MagX = this.magnitudeArray2[x + indexStorage.get(j)];
-
-                    if (comp1MagX < comp2MagX) {
-                        if (comp1MagX/comp2MagX > .4) {
-                            counter += 1;
-                        }
-                    } else {
-                        if (comp2MagX/comp1MagX > .4) {
-                            counter += 1;
-                        }
-                        //counter += comp2MagX/comp1MagX;
+                   // System.out.println(counter);
+                    if (counter > smallestMatch) {
+                        smallestMatch = counter;
                     }
-                    //counter = comp1[x].approxEqual(comp2[x + indexStorage.get(j)]);
-                    //System.out.println(counter);
                 }
-                counter = counter/comp1.length;
-               // System.out.println(counter);
-                if (counter > smallestMatch) {
-                    smallestMatch = counter;
+                return smallestMatch;
+            
+            } else {
+                
+                ArrayList<Integer> indexStorage = 
+                        this.shortCompare(comp1, comp2);
+            
+                //System.out.println(indexStorage);
+                //System.out.println(comp2.length);
+                //System.out.println(comp1.length);
+                
+                float counter;
+                float smallestMatch = 0;
+                for (int j = 0; j < indexStorage.size(); j++) {
+                    counter = 0;
+                    for (int x = 0; x < comp1.length; x++) {
+                        //System.out.println(comp1[x].approxEqual(comp2[x + 
+                                                     //indexStorage.get(j)]));
+                        Double comp1MagX = Math.sqrt(this.magnitudeArray1[x] * 
+                                this.magnitudeArray1[x]); 
+                        Double comp2MagX = Math.sqrt(this.magnitudeArray2[x + 
+                               indexStorage.get(j)] * this.magnitudeArray2[x + 
+                                    indexStorage.get(j)]);
+                        if (comp1MagX < comp2MagX) {
+                            if (comp1MagX/comp2MagX > .43) {
+                                counter += 1;
+                            }
+                        } else {
+                            if (comp2MagX/comp1MagX > .43) {
+                                counter += 1;
+                            }
+                            //counter += comp2MagX/comp1MagX;
+                        }
+                        //counter = comp1[x].approxEqual(comp2[x + 
+                                                   //indexStorage.get(j)]);
+                        //System.out.println(counter);
+                    }
+                    counter = counter/comp1.length;
+                   // System.out.println(counter);
+                    if (counter > smallestMatch) {
+                        smallestMatch = counter;
+                    }
                 }
+                return smallestMatch;
             }
-            return smallestMatch;
-        }
-        
-        private static boolean isPowerOfTwoFast(int n) {
-            return ((n!=0) && (n&(n-1))==0);
         }
 }

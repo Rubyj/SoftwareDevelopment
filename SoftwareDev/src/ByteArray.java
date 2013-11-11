@@ -24,12 +24,15 @@ public class ByteArray {
                     while ((read = in.read(buff)) > 0) {
                             out.write(buff, 0, read);
                     }
-                     
+                    
+                    in.close();
                     out.flush();
                     audioBytes = out.toByteArray();
+                    out.close();
                 } catch (UnsupportedAudioFileException e) {
                     // If Unsupported File Type
-                    System.err.println("ERROR: Unsupported Audio File Format Detected. Exiting..");
+                    System.err.println("ERROR: Unsupported Audio File "
+                            + "Format Detected. Exiting..");
                     System.exit(1);
                 } catch (IOException e) {
                     // If File Not Found
