@@ -5,10 +5,14 @@ public class FFT {
         byte[] magnitudeArray1;
         byte[] magnitudeArray2;
         
+        //The index array
+        protected ArrayList<Integer> indexStorage;
+        
         FFT() {}
         
         //Function to compute FFT of given Complex[]
         public void computeFFT(Complex[] complexArr) {
+            
             int N = complexArr.length;
             
             if (N <= 1) {
@@ -28,7 +32,7 @@ public class FFT {
             
             for (int i = 0; i < N/2; i++) {
                 Complex cNumber = new Complex((float)Math.cos(-2 * Math.PI 
-                        * i / N), 
+                                                                 * i / N), 
                         (float)Math.sin(-2 * Math.PI * i / N));
                 cNumber = cNumber.times(oddArray[i]);
                 complexArr[i] = cNumber.add(evenArray[i]);
@@ -41,7 +45,7 @@ public class FFT {
         public ArrayList<Integer> shortCompare(byte[] c1, byte[] c2) {
             
             //ArrayList<Float> storage = new ArrayList<Float>();
-            ArrayList<Integer> indexStorage = new ArrayList<Integer>();
+            this.indexStorage = new ArrayList<Integer>();
             
             byte[] comp1 = c1;
             byte[] comp2 = c2;
@@ -61,7 +65,7 @@ public class FFT {
             //storage.add(tempScore);
             
             if (comp1.length == comp2.length) {
-                indexStorage.add(0);
+                this.indexStorage.add(0);
             } else {
                 for (int i = 1; i <= comp2.length - comp1.length; i++) {
                     tempScore = tempScore - comp2[i - 1];
@@ -95,7 +99,7 @@ public class FFT {
             magnitudeArray2 = comp2.clone();
             
             if (comp1.length == comp2.length) {
-                ArrayList<Integer> indexStorage = 
+                this.indexStorage = 
                         this.shortCompare(comp1, comp2);
                 
                 //System.out.println(indexStorage);
@@ -138,7 +142,7 @@ public class FFT {
             
             } else {
                 
-                ArrayList<Integer> indexStorage = 
+                this.indexStorage = 
                         this.shortCompare(comp1, comp2);
             
                 //System.out.println(indexStorage);
@@ -179,5 +183,78 @@ public class FFT {
                 }
                 return smallestMatch;
             }
+        }
+        
+        public double longContains(Complex[] c1, Complex[] c2){
+            
+            Complex[] complexOne = c1;
+            Complex[] complexTwo = c2;
+            
+            if (c1.length > c2.length) {
+                complexOne = c2;
+                complexTwo = c1;
+            }
+            
+            this.computeFFT(complexOne);
+            
+            double biggestPerc = 500000;
+            System.out.println(indexStorage.size());
+            for (int index : this.indexStorage) {
+                
+                //System.out.println("c1: " + complexOne.length + ", c2 length: "+ complexTwo.length);
+                
+                if (complexOne.length > complexTwo.length){
+                    System.out.println("Abort!");
+                    return biggestPerc;
+                }
+                
+                Complex[] tempArray = new Complex[complexOne.length];
+                
+                for (int i = index; i < complexOne.length + index; i++) {
+                    tempArray[i - index] = complexTwo[i];
+                }
+                this.computeFFT(tempArray);
+                
+                int i = 0;
+                double score = 0;
+                
+                for (Complex freqValue : tempArray) {
+                    /*
+                    double freqMag = freqValue.magnitude();
+                    double compMag = complexOne[i].magnitude();
+                    
+                    if (freqMag == compMag){
+                        score += 1;
+                    } else if (compMag > freqMag){
+                        if (freqMag == 0){
+                            score += 1/compMag;
+                        } else
+                            score += freqMag/compMag;
+                    } else {
+                        if (compMag == 0){
+                            score += 1/freqMag;
+                        } else
+                            score += compMag/freqMag;
+                    }
+                    score = Math.abs(score);
+                    */
+                    score += Math.abs(freqValue.magnitude() - complexOne[i].magnitude());
+                    
+                    i++;
+                }
+                
+                double avgPerc = score/(i+1);
+                
+                //System.out.println("score: " + avgPerc);
+                if(avgPerc < biggestPerc){
+                    biggestPerc = avgPerc;
+                }
+                
+                
+                
+            }
+            
+            return biggestPerc;
+            
         }
 }

@@ -24,11 +24,11 @@ public class Assignment5{
         //Compute two inputs to ByteArrays
         ByteArray b1 = new ByteArray();
         byte[] bytesOne = b1.toByteArray(path1);
-        //Complex[] complexOne = b1.toComplexArray(bytesOne);
+        Complex[] complexOne = b1.toComplexArray(bytesOne);
         
         ByteArray b2 = new ByteArray();
         byte[] bytesTwo = b2.toByteArray(path2);
-        //Complex[] complexTwo = b2.toComplexArray(bytesTwo);
+        Complex[] complexTwo = b2.toComplexArray(bytesTwo);
         
         //Compute the FFT of the two Complex[] and store into result
         //PROGRAM SEEMS TO WORK BETTER WITHOUT COMPUTING THE FFT
@@ -40,11 +40,31 @@ public class Assignment5{
         float result = fft.shortContains(bytesOne, bytesTwo);
         //System.out.println(result);
         
-        //If result greater than 50% print match else print no match
-        if (result >= .5) {
-            System.out.println("MATCH");
-            System.exit(0);
+        String shortName;
+        String longName;
+        if (bytesOne.length < bytesTwo.length) {
+            shortName = b1.songName;
+            longName = b2.songName;
         } else {
+            shortName = b2.songName;
+            longName = b1.songName;
+        }
+        
+        //If result greater than 50% print match else print no match
+        if (result > .5) {
+            System.out.println("MATCH " + shortName + " " + longName);
+            System.exit(0);
+        } else if (result >= .45) {
+            double simScore = fft.longContains(complexOne, complexTwo);
+            if (simScore <= 10000){
+                System.out.println("MATCH: " + simScore);
+                System.exit(0);
+            } else {
+                System.out.println("NO MATCH:" + simScore);
+                System.exit(0);
+            }
+        } else {
+            System.out.println(result);
             System.out.println("NO MATCH");
             System.exit(0);
         }

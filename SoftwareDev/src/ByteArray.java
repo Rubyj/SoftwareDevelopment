@@ -8,6 +8,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 
 public class ByteArray {
+    
+        protected String songName;
         
         //Method to covert given wav (by file path) to an array of Bytes
         public byte[] toByteArray(String path) {
@@ -16,7 +18,9 @@ public class ByteArray {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 AudioInputStream in;
                 try {
-                    in = AudioSystem.getAudioInputStream(new File(path));
+                    File f = new File(path);
+                    this.songName = f.getName();
+                    in = AudioSystem.getAudioInputStream(f);
                     int read;
                     byte[] buff;
                     buff = new byte[1024];
