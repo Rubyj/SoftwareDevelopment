@@ -51,10 +51,10 @@ public class Assignment5{
         }
         
         //If result greater than 50% print match else print no match
-        if (result > .5) {
+        if (result >= .6) {
             System.out.println("MATCH " + shortName + " " + longName);
             System.exit(0);
-        } else if (result >= .45) {
+        } else if (result >= .4 && result < .6) {
             double simScore = fft.longContains(complexOne, complexTwo);
             if (simScore <= 10000){
                 System.out.println("MATCH: " + simScore);

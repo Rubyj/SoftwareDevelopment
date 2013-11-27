@@ -1,0 +1,56 @@
+
+#!/bin/sh
+
+cd `dirname "$0"`
+T1=$(file --mime-type -b "$2") 
+T2=$(file --mime-type -b "$4") 
+mkdir /tmp/rjpc/
+
+if [ "$#" == "0" ]; then
+    java -jar ./Assignment8.jar
+
+else
+
+echo "foo" > /tmp/rjpc/input1.wav
+echo "foo" > /tmp/rjpc/input2.wav
+
+if [ ! $1 == "-f" ] || [ ! $3 == "-f" ]; then
+	java -jar ./Assignment8.jar
+else
+
+	if [ ! -f $2 ] || [ ! -f $4 ]; then
+	echo "poopy"
+	    java -jar ./Assignment8.jar $2 $4
+
+	else 
+
+		if [ "$T1" == "audio/mpeg" ]; then
+			cp $2 /tmp/rjpc/input1.mp3
+			lame --decode --quiet  /tmp/rjpc/input1.mp3 /tmp/rjpc/temp1.wav
+			lame --quiet -a -b 16 --resample 11.025 /tmp/rjpc/temp1.wav /tmp/rjpc/temp1.mp3
+			lame --decode --quiet /tmp/rjpc/temp1.mp3 /tmp/rjpc/input1.wav
+		fi
+		if [ "$T1" == "audio/x-wav" ]; then
+			cp $2 /tmp/rjpc/temp1.wav
+			lame --quiet --noreplaygain -a -b 16 --resample 11.025 /tmp/rjpc/temp1.wav /tmp/rjpc/input1.mp3
+			lame --decode --quiet /tmp/rjpc/input1.mp3 /tmp/rjpc/input1.wav
+			#cp $2 /tmp/rjpc/input1.wav
+		fi 
+
+		if [ "$T2" == "audio/mpeg" ]; then
+			cp $4 /tmp/rjpc/input2.mp3
+			lame --decode --quiet /tmp/rjpc/input2.mp3 /tmp/rjpc/temp2.wav
+			lame --quiet -a -b 16 --resample 11.025 /tmp/rjpc/temp2.wav /tmp/rjpc/temp2.mp3
+			lame --decode --quiet /tmp/rjpc/temp2.mp3 /tmp/rjpc/input2.wav
+		fi
+		if [ "$T1" == "audio/x-wav" ]; then
+			cp $4 /tmp/rjpc/temp2.wav
+			lame --quiet --noreplaygain -a -b 16 --resample 11.025 /tmp/rjpc/temp2.wav /tmp/rjpc/input2.mp3
+			lame --decode --quiet /tmp/rjpc/input2.mp3 /tmp/rjpc/input2.wav
+			#cp $4 /tmp/rjpc/input2.wav
+		fi
+		java -jar ./Assignment8.jar /tmp/rjpc/input1.wav /tmp/rjpc/input2.wav 
+	fi
+fi
+fi
+rm -rf /tmp/rjpc/

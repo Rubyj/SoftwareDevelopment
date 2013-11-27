@@ -58,8 +58,8 @@ public class FFT {
             float complexScore = 0;
             float tempScore = 0;
             for (int i = 0; i < comp1.length; i++) {
-                complexScore = complexScore + comp1[i];
-                tempScore = tempScore + comp2[i];
+                complexScore = Math.abs(complexScore) + Math.abs(comp1[i]);
+                tempScore = Math.abs(tempScore) + Math.abs(comp2[i]);
             }
             
             //storage.add(tempScore);
@@ -68,17 +68,24 @@ public class FFT {
                 this.indexStorage.add(0);
             } else {
                 for (int i = 1; i <= comp2.length - comp1.length; i++) {
-                    tempScore = tempScore - comp2[i - 1];
-                    tempScore = tempScore + comp2[i + comp1.length - 1];
+                    tempScore = Math.abs(tempScore) - Math.abs(comp2[i - 1]);
+                    tempScore = Math.abs(tempScore) + Math.abs(comp2[i + comp1.length - 1]);
                     
-                    if ((Math.sqrt(Math.pow(tempScore - complexScore, 2))/
-                            comp1.length) < 0.00000001) {
-                        //storage.add(tempScore);
+                    if (tempScore == complexScore) {
                         indexStorage.add(i);
+                    } else if (tempScore < complexScore) {
+                        if (tempScore/complexScore > .99999) {
+                            indexStorage.add(i);
+                        }
+                    } else if (complexScore < tempScore) {
+                        if (complexScore/tempScore > .99999) {
+                            indexStorage.add(i);
+                        }
                     }
                 }
             }
             
+            System.out.println(indexStorage);
             return indexStorage;
 
         }
@@ -197,7 +204,7 @@ public class FFT {
             
             this.computeFFT(complexOne);
             
-            double biggestPerc = 500000;
+            double biggestPerc = 0;
             System.out.println(indexStorage.size());
             for (int index : this.indexStorage) {
                 
@@ -219,10 +226,10 @@ public class FFT {
                 double score = 0;
                 
                 for (Complex freqValue : tempArray) {
-                    /*
+                    
                     double freqMag = freqValue.magnitude();
                     double compMag = complexOne[i].magnitude();
-                    
+                    /*
                     if (freqMag == compMag){
                         score += 1;
                     } else if (compMag > freqMag){
@@ -238,19 +245,24 @@ public class FFT {
                     }
                     score = Math.abs(score);
                     */
-                    score += Math.abs(freqValue.magnitude() - complexOne[i].magnitude());
-                    
+                    if (freqMag < compMag) {
+                        if (freqMag/compMag > .6) {
+                            score += 1;
+                        }
+                    } else {
+                        if (freqMag/compMag > .6) {
+                            score += 1;
+                        }
+                    }
                     i++;
                 }
                 
-                double avgPerc = score/(i+1);
+                double avgPerc = score/tempArray.length;
                 
                 //System.out.println("score: " + avgPerc);
-                if(avgPerc < biggestPerc){
+                if(avgPerc > biggestPerc){
                     biggestPerc = avgPerc;
                 }
-                
-                
                 
             }
             
