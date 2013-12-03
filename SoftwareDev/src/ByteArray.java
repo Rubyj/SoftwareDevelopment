@@ -8,8 +8,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 
 public class ByteArray {
-    
-        protected String songName;
         
         //Method to covert given wav (by file path) to an array of Bytes
         public byte[] toByteArray(String path) {
@@ -19,7 +17,6 @@ public class ByteArray {
                 AudioInputStream in;
                 try {
                     File f = new File(path);
-                    this.songName = f.getName();
                     in = AudioSystem.getAudioInputStream(f);
                     int read;
                     byte[] buff;
@@ -36,11 +33,11 @@ public class ByteArray {
                 } catch (UnsupportedAudioFileException e) {
                     // If Unsupported File Type
                     System.err.println("ERROR: Unsupported Audio File "
-                            + "Format Detected. Exiting..");
+                            + "Format Detected.");
                     System.exit(1);
                 } catch (IOException e) {
                     // If File Not Found
-                    System.err.println("ERROR: File Not Found. Exiting..");
+                    System.err.println("ERROR: Unsupported File Type.");
                     System.exit(1);
                 }
                 

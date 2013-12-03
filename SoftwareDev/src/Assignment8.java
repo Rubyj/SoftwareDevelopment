@@ -2,16 +2,42 @@ import java.io.IOException;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class Assignment5{
+public class Assignment8{
+    
     public static void main(String[] args) throws UnsupportedAudioFileException, IOException {
         
+        String song1 = "";
+        String song2 = "";
+        
         //If program is provided more/less than 2 arguments throw error
-        if (args.length != 2) {
+        if (args.length == 1) {
+            if (args[0].equals("file")) {
+                System.err.println("ERROR: Invalid file");
+                System.exit(1);
+            } else if (args[0].equals("directory")) {
+                System.err.println("ERROR: Invalid directory");
+                System.exit(1);
+            } else if (args[0].equals("file/directory")) {
+                System.err.println("ERROR: Invalid input");
+                System.exit(1);
+            }
+        }
+        
+        
+        if (args.length != 4) {
             System.err.println("ERROR: This Program Only "
-                    + "Supports 2 files. Exiting..");
+                    + "Supports 2 files or directories. Exiting..");
             System.exit(1);
         }
-    
+        
+        song1 = args[2];
+        song2 = args[3];
+        
+        String[] shortSong1 = song1.split("/");
+        String[] shortSong2 = song2.split("/");
+        song1 = shortSong1[shortSong1.length - 1];
+        song2 = shortSong2[shortSong2.length - 1];
+        
         String path1 = args[0];
         String path2 = args[1];
     
@@ -42,12 +68,12 @@ public class Assignment5{
         
         String shortName;
         String longName;
-        if (bytesOne.length < bytesTwo.length) {
-            shortName = b1.songName;
-            longName = b2.songName;
+        if (bytesOne.length <= bytesTwo.length) {
+            shortName = song1;
+            longName = song2;
         } else {
-            shortName = b2.songName;
-            longName = b1.songName;
+            shortName = song2;
+            longName = song1;
         }
         
         //If result greater than 50% print match else print no match
@@ -56,15 +82,15 @@ public class Assignment5{
             System.exit(0);
         } else if (result >= .4 && result < .6) {
             double simScore = fft.longContains(complexOne, complexTwo);
-            if (simScore <= 10000){
-                System.out.println("MATCH: " + simScore);
+            if (simScore >= .7) {
+                System.out.println("MATCH " + shortName + " " + longName + simScore);
                 System.exit(0);
             } else {
-                System.out.println("NO MATCH:" + simScore);
+                System.out.println("NO MATCH " + simScore);
                 System.exit(0);
             }
         } else {
-            System.out.println(result);
+            //System.out.println(result);
             System.out.println("NO MATCH");
             System.exit(0);
         }

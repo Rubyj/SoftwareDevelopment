@@ -85,7 +85,7 @@ public class FFT {
                 }
             }
             
-            System.out.println(indexStorage);
+            //System.out.println(indexStorage);
             return indexStorage;
 
         }
@@ -205,13 +205,13 @@ public class FFT {
             this.computeFFT(complexOne);
             
             double biggestPerc = 0;
-            System.out.println(indexStorage.size());
+            //System.out.println(indexStorage.size());
             for (int index : this.indexStorage) {
                 
                 //System.out.println("c1: " + complexOne.length + ", c2 length: "+ complexTwo.length);
                 
                 if (complexOne.length > complexTwo.length){
-                    System.out.println("Abort!");
+                    //System.out.println("Abort!");
                     return biggestPerc;
                 }
                 
@@ -229,22 +229,7 @@ public class FFT {
                     
                     double freqMag = freqValue.magnitude();
                     double compMag = complexOne[i].magnitude();
-                    /*
-                    if (freqMag == compMag){
-                        score += 1;
-                    } else if (compMag > freqMag){
-                        if (freqMag == 0){
-                            score += 1/compMag;
-                        } else
-                            score += freqMag/compMag;
-                    } else {
-                        if (compMag == 0){
-                            score += 1/freqMag;
-                        } else
-                            score += compMag/freqMag;
-                    }
-                    score = Math.abs(score);
-                    */
+
                     if (freqMag < compMag) {
                         if (freqMag/compMag > .6) {
                             score += 1;
