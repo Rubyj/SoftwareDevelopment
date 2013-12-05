@@ -4,12 +4,15 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Assignment8{
     
-    public static void main(String[] args) throws UnsupportedAudioFileException, IOException {
+    public static void main(String[] args) 
+            throws UnsupportedAudioFileException, IOException {
         
+        //Used for storing song names
         String song1 = "";
         String song2 = "";
         
-        //If program is provided more/less than 2 arguments throw error
+        //If program is provided more/less than 4 arguments throw error
+        //If there is only 1 argument parse it to determine which error 
         if (args.length == 1) {
             if (args[0].equals("file")) {
                 System.err.println("ERROR: Invalid file");
@@ -22,17 +25,18 @@ public class Assignment8{
                 System.exit(1);
             }
         }
-        
-        
+              
         if (args.length != 4) {
-            System.err.println("ERROR: This Program Only "
-                    + "Supports 2 files or directories. Exiting..");
+            System.err.println("ERROR: This program only "
+                    + "supports 2 mp3/wav files or "
+                    + "directories containing these type of files.");
             System.exit(1);
         }
         
         song1 = args[2];
         song2 = args[3];
         
+        //Parse the song name from directory parameter
         String[] shortSong1 = song1.split("/");
         String[] shortSong2 = song2.split("/");
         song1 = shortSong1[shortSong1.length - 1];
@@ -56,16 +60,18 @@ public class Assignment8{
         byte[] bytesTwo = b2.toByteArray(path2);
         Complex[] complexTwo = b2.toComplexArray(bytesTwo);
         
-        //Compute the FFT of the two Complex[] and store into result
+        //Create instance of our FFT class
         //PROGRAM SEEMS TO WORK BETTER WITHOUT COMPUTING THE FFT
         //AND RUNNING COMPARISON ON BYTE ARRAY
         FFT fft = new FFT();
         //fft.computeFFT(complexOne);
         //fft.computeFFT(complexTwo);
         
+        //Run the shortContains method and store the result
         float result = fft.shortContains(bytesOne, bytesTwo);
         //System.out.println(result);
         
+        //Guarantee name of shorter song is shortName
         String shortName;
         String longName;
         if (bytesOne.length <= bytesTwo.length) {
@@ -76,19 +82,10 @@ public class Assignment8{
             longName = song1;
         }
         
-        //If result greater than 50% print match else print no match
-        if (result >= .6) {
+        //If result greater than 40% print match else print no match
+        if (result > .4) {
             System.out.println("MATCH " + shortName + " " + longName);
             System.exit(0);
-        } else if (result >= .4 && result < .6) {
-            double simScore = fft.longContains(complexOne, complexTwo);
-            if (simScore >= .7) {
-                System.out.println("MATCH " + shortName + " " + longName + simScore);
-                System.exit(0);
-            } else {
-                System.out.println("NO MATCH " + simScore);
-                System.exit(0);
-            }
         } else {
             //System.out.println(result);
             System.out.println("NO MATCH");

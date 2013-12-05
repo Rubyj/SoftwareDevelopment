@@ -2,6 +2,9 @@ import java.util.ArrayList;
 
 public class FFT {
         
+        //A copy of the two inputs to shortContains 
+        //used for magnitude comparisons
+        //Instantiated in shortContains
         byte[] magnitudeArray1;
         byte[] magnitudeArray2;
         
@@ -69,7 +72,8 @@ public class FFT {
             } else {
                 for (int i = 1; i <= comp2.length - comp1.length; i++) {
                     tempScore = Math.abs(tempScore) - Math.abs(comp2[i - 1]);
-                    tempScore = Math.abs(tempScore) + Math.abs(comp2[i + comp1.length - 1]);
+                    tempScore = Math.abs(tempScore) + 
+                            Math.abs(comp2[i + comp1.length - 1]);
                     
                     if (tempScore == complexScore) {
                         indexStorage.add(i);
@@ -92,7 +96,7 @@ public class FFT {
         
         //Check to see if c1 is approximately contained in c2, starting at
         //each index in the precomputed indexStorage 
-        //(similarity score is a % out of 100)
+        //(similarity score is a % out of 100 in decimal form [i.e. .4])
         public float shortContains(byte[] c1, byte[] c2){
             byte[] comp1 = c1;
             byte[] comp2 = c2;
@@ -192,6 +196,9 @@ public class FFT {
             }
         }
         
+        //Method to compare the FFT of a segment of longer input 
+        //to the FFT of shorter input
+        //NOT CURRENTLY IN USE
         public double longContains(Complex[] c1, Complex[] c2){
             
             Complex[] complexOne = c1;
@@ -208,7 +215,8 @@ public class FFT {
             //System.out.println(indexStorage.size());
             for (int index : this.indexStorage) {
                 
-                //System.out.println("c1: " + complexOne.length + ", c2 length: "+ complexTwo.length);
+                //System.out.println("c1: " + complexOne.length + ", 
+                    //c2 length: "+ complexTwo.length);
                 
                 if (complexOne.length > complexTwo.length){
                     //System.out.println("Abort!");
@@ -231,11 +239,11 @@ public class FFT {
                     double compMag = complexOne[i].magnitude();
 
                     if (freqMag < compMag) {
-                        if (freqMag/compMag > .6) {
+                        if (freqMag/compMag > .9999) {
                             score += 1;
                         }
                     } else {
-                        if (freqMag/compMag > .6) {
+                        if (freqMag/compMag > .9999) {
                             score += 1;
                         }
                     }
